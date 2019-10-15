@@ -13,12 +13,19 @@ public class EchoServer {
             while (true) {
                 Socket client = sock.accept();
                 System.out.println("Request accepted");
+                InputStream input = client.getInputStream();
+                OutputStream output = client.getOutputStream();
 
-                PrintWriter writer = new PrintWriter(client.getOutputStream(), true);
+                int line;
+                while ((line = input.read()) != -1) {
+                    output.write(line);
+                    System.out.println("Passed through here: " + line);
+                }
 
                 //writer.println(new java.util.Date().toString());
 
-
+                client.shutdownOutput();
+                System.out.flush();
                 client.close();
             }
         }

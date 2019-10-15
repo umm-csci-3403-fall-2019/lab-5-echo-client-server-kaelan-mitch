@@ -19,19 +19,18 @@ public class EchoClient {
 
         try {
 
-            InputStream input = System.in;
-            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-
             Socket socket = new Socket(server, portNum);
 
-            OutputStream output = socket.getOutputStream();
+            OutputStream out = socket.getOutputStream();
 
-            int read = input.read();
+            InputStream in = socket.getInputStream();
 
-            while (read > 0) {
-                output.write(read);
+            int line;
+            while ((line = System.in.read()) != -1) {
+                out.write(line);
+                int newLine = in.read();
+                System.out.write(newLine);
             }
-
 
 //            InputStream input = socket.getInputStream();
 //            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
@@ -41,6 +40,8 @@ public class EchoClient {
 //
 //                System.out.println(line);
 //            }
+            socket.shutdownOutput();
+            System.out.flush();
             socket.close();
         }
         catch (ConnectException ce) {
